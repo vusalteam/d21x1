@@ -1,3 +1,4 @@
+"use client";
 import { IMatch } from "@/types";
 import { MatchStatusType, NatchResultType } from "@prisma/client";
 

@@ -9,3 +9,162 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+//User 
+enum UserRole {
+  ADMIN
+  USER
+  MODERATOR
+  BANNED
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+}
+
+model User {
+  id               Int            @id @default(autoincrement())
+  username         String
+  emailVerified    DateTime?
+  avatar           String         @default("/assets/images/avatar.png")
+  email            String         @unique
+  password         String
+  steamId          String?        @unique @map("steam_id")
+  accountType      UserRole       @default(USER) @map("account_type")
+  status           UserStatus?
+  statusMessage    String         @default("")
+  roles            UsersOnRoles[]
+  balance          Balance?
+  receivedMatches  Match[]        @relation("UserReceivedMatches")
+  sentMatches      Match[]        @relation("UserSentMatches")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  followers        User[]         @relation("UserFollows")
+  followings       User[]         @relation("UserFollows")
+  sentMessages     Message[]      @relation("UserSentMessages")
+  receivedMessages Message[]      @relation("UserReceivedMessages")
+  blacklists       Blacklist[]
+}
+
+model Blacklist {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  lists     Int[]
+}
+
+//Message 
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+model Message {
+  id          Int           @id @default(autoincrement())
+  content     String
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  status      MessageStatus @default(SENT)
+  sender      User?         @relation("UserSentMessages", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  senderId    Int?          @map("sender_id")
+  recipient   User?         @relation("UserReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recipientId Int?          @map("recipient_id")
+}
+
+//Role
+model Role {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  users     UsersOnRoles[]
+}
+
+model UsersOnRoles {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roleId    Int      @map("role_id")
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+//Balance 
+enum BalanceHistoryType {
+  EXPENSE
+  INCOME
+}
+
+enum BalanceHistoryOperation {
+  DEPOSIT
+  WITHDRAW
+  PAYMENT
+}
+
+model Balance {
+  id        Int              @id @default(autoincrement())
+  userId    Int              @unique @map("user_id")
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amount    Float            @default(0)
+  history   BalanceHistory[]
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+}
+
+model BalanceHistory {
+  id          Int                     @id @default(autoincrement())
+  balance     Balance                 @relation(fields: [balanceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  balanceId   Int                     @map("balance_id")
+  amount      Float                   @default(0)
+  description String?
+  type        BalanceHistoryType
+  operation   BalanceHistoryOperation
+  status      Boolean                 @default(false)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+}
+
+//Match
+enum MatchResult {
+  DRAW
+  PENDING
+  UNDEFINED
+  CANCELED
+  FINISHED
+}
+
+enum MatchStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CONTESTED
+  CANCELED
+  FINISHED
+}
+
+enum MatchMode {
+  SOLO
+  TEAM
+}
+
+model Match {
+  id          Int         @id @default(autoincrement())
+  desciption  String?
+  steamId     Int?        @unique @map("steam_id")
+  result      MatchResult @default(DRAW)
+  winnerId    Int?        @map("winner_id")
+  bet         Float
+  mode        MatchMode   @default(SOLO)
+  recipientId Int?        @map("recipient_id")
+  recipient   User?       @relation("UserReceivedMatches", fields: [recipientId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  senderId    Int?        @map("sender_id")
+  sender      User?       @relation("UserSentMatches", fields: [senderId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  status      MatchStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
