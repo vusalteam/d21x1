@@ -4,13 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { AiOutlinePlus } from "react-icons/ai";
 import CustomModal from "@/components/modals/CustomModal";
-import { UserStatusType } from "@prisma/client";
+import { UserStatus } from "@prisma/client";
 interface IProps {
   user: {
     id: number;
     username: string;
     avatar: string;
     steamId: string;
+    statusMessage: string;
     roles: [
       {
         id: number;
@@ -22,6 +23,11 @@ interface IProps {
       id: number;
       amount: number;
     };
+    stats:{
+      winsCount: number;
+      lossesCount: number;
+      gamesCount: number;
+    }
 
   };
 }
@@ -37,7 +43,7 @@ export default function UserBar({ user }: IProps) {
             width={200}
             height={200}
           />
-          {user.status === UserStatusType.ONLINE && (
+          {user.status === UserStatus.ONLINE && (
             <p className="flex flex-row justify-center items-center p-1 bottom-0 w-full">
               <span className="text-xs text-green-500">52</span>
               <span className="text-xs">/</span>

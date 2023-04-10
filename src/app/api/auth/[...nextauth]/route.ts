@@ -4,7 +4,7 @@ import { prisma } from "@/api/db";
 import { compare, hash } from "bcryptjs";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { adapter } from "next/dist/server/web/adapter";
-import { UserStatusType } from "@prisma/client";
+import { UserStatus } from "@prisma/client";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
@@ -19,11 +19,12 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials, req) {
-        if (!credentials?.email && !credentials?.password) throw new Error("Invalid credentials");
+        if (!credentials?.email && !credentials?.password)
+          throw new Error("Invalid credentials");
         const { email, password } = credentials;
         const user = await prisma.user.findUnique({
           where: { email },
-          include: { roles: true, balance: { include: { history: true } } },
+          include: { roles: true, balance: true },
         });
         if (!user) throw new Error("Invalid username or password");
         const passwordIsCorrect = await compare(password, user.password);
@@ -38,6 +39,7 @@ export const authOptions: NextAuthOptions = {
           roles: user.roles,
           balance: user.balance,
           avatar: user.avatar,
+          accountType: user.accountType,
         };
       },
     }),
@@ -66,7 +68,7 @@ export const authOptions: NextAuthOptions = {
           where: { email },
         });
         if (emailExist) return null;
-        const usernameExist = await prisma.user.findFirst({
+        const usernameExist = await prisma.user.findUnique({
           where: { username },
         });
         if (usernameExist) return null;
@@ -102,56 +104,53 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   events: {
-    signIn: async ({user})=>{
-
+    signIn: async ({ user }) => {
       await prisma.user.update({
-        where:{email:user.email as string},
-        data:{status:UserStatusType.ONLINE}
-      })
+        where: { email: user.email as string },
+        data: { status: UserStatus.ONLINE },
+      });
     },
-    signOut:async({token:user})=> {
+    signOut: async ({ token: user }) => {
       await prisma.user.update({
-        where:{email:user.email as string},
-        data:{status:UserStatusType.OFFLINE}
-      })
+        where: { email: user.email as string },
+        data: { status: UserStatus.OFFLINE },
+      });
     },
   },
   callbacks: {
     session: ({ session, token }) => {
       //console.log("Session Callback", { token });
-      const user = {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          username: token.username,
-          steamId: token.steamId,
-          roles: token.roles,
-          balance: token.balance,
-          avatar: token.avatar,
-        },
-      };
-      
-      return user;
+      if (token) {
+        const t = token as unknown as any;
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: t.id,
+            username: t.username,
+            steamId: t.steamId,
+            roles: t.roles,
+            balance: t.balance,
+            avatar: t.avatar,
+            accountType: t.accountType,
+          },
+        };
+      }
+      return session;
     },
-    signIn: async (paylaod) => {
-      //console.log("SignIn Callback", paylaod);
-      return true;
-    },
-    jwt: ({ token, user,account }) => {
+    jwt: ({ token, user, account }) => {
       //console.log("account",account);
-    
-      //console.log("JWT Callback", { token, user });
       if (user) {
         const u = user as unknown as any;
         return {
           ...token,
           id: u.id,
           roles: u.roles,
-          balance:u.balance,
+          balance: u.balance,
           username: u.username,
           steamId: u.steamId,
           avatar: u.avatar,
+          accountType: u.accountType,
         };
       }
       return token;

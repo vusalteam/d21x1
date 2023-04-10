@@ -1,5 +1,4 @@
 "use client";
-import { ICurrentUser } from "@/types";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,13 +25,11 @@ export default function Form() {
           onSubmit={(e) => {
             e.preventDefault();
             signIn("signin", {
-              redirect: false,
+              redirect: true,
               email,
               password
               //@ts-ignore
             }).then(({ ok, error }) => {
-              console.log("error",error);
-              console.log("ok",ok);
               if (error) {
                 toast.error(error);
               } else {

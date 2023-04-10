@@ -1,11 +1,11 @@
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { getSession } from "@/actions/getCurrentUser";
 import { NextAuthProvider as AuthProvider } from "./providers";
 import Toaster from "@/components/toaster";
 import { Raleway } from "next/font/google";
 import SideBar from "@/components/sidebar/SideBar";
+import { getSession } from "@/services/user";
 const lato = Raleway({
   subsets: ["latin"],
 });
@@ -22,8 +22,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
-  console.log(session);
-  
   return (
     <html lang="en">
       <body

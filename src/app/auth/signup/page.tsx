@@ -1,4 +1,4 @@
-import { getSession } from "@/actions/getCurrentUser";
+import { getSession } from "@/services/user";
 import Form from "@/components/auth/signup/Form";
 import { redirect } from "next/navigation";
 

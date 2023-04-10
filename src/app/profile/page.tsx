@@ -1,16 +1,19 @@
 
-import { getCurrentUser } from "@/actions/getCurrentUser";
+import { getCurrentUser } from "@/services/user";
 import GameHistory from "../../components/games-history/GameHistoryList";
 import UserBar from "./components/user-bar/UserBar";
 import { prisma } from "../api/db";
+import { getGames } from "@/services/user";
 const getData = async()=> {
   const currentUser = await getCurrentUser()
   if(!currentUser) return {user:null}
+  const { matchesCount,winsCount,lossesCount} =  await getGames(currentUser.id)
   const user = await prisma.user.findUnique({where:{id:currentUser.id},select:{
     id:true,
     username:true,
     avatar:true,
     steamId:true,
+    statusMessage:true,
     roles:{
       select:{
         role:true,
@@ -19,7 +22,14 @@ const getData = async()=> {
     status:true,
     balance:true,
   }})
-  return {user}
+  return {user:{
+    ...user,
+    stats:{
+      matchesCount,
+      winsCount,
+      lossesCount,
+    }
+  }}
   
 }
 const Page = async () => {

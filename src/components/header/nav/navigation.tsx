@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { ICurrentUser } from "@/types";
 
 export default function Navigation() {
   const { data: session } = useSession();

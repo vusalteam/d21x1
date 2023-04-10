@@ -1,7 +1,12 @@
 "use client";
-import { IMatch } from "@/types";
-import { MatchStatusType, NatchResultType } from "@prisma/client";
-
+import { MatchStatus, MatchResult, MatchMode } from "@prisma/client";
+interface IMatch {
+  id: number;
+  bet: number;
+  result: MatchResult;
+  mode: MatchMode;
+  status: MatchStatus;
+}
 export default function RequestItem(params: { request: IMatch }) {
   const {request} = params;
   return (
@@ -10,7 +15,7 @@ export default function RequestItem(params: { request: IMatch }) {
                   <div className="text-lg">Ставка: {request.bet} руб.</div>
                   <div className="text-lg">
                     Резульать:{" "}
-                    {request.result === NatchResultType.DRAW
+                    {request.result === MatchResult.DRAW
                       ? "ОЖИДАЕТ"
                       : "СЫГРАНО"}
                   </div>
@@ -19,7 +24,7 @@ export default function RequestItem(params: { request: IMatch }) {
                   <div className="text-lg">Тип: {request.mode}</div>
                   <div className="text-lg">
                     Статус:{" "}
-                    {request.status == MatchStatusType.PENDING
+                    {request.status == MatchStatus.PENDING
                       ? "На рассмотрении"
                       : ""}
                   </div>
