@@ -2,7 +2,7 @@ import { prisma } from "@/app/api/db";
 import { MatchResult, MatchStatus } from "@prisma/client";
 const baseSelect = {
   id: true,
-  desciption: true,
+  description: true,
   createdAt: true,
   bet: true,
   winnerId: true,
@@ -11,6 +11,8 @@ const baseSelect = {
   steamId: true,
   mode: true,
   updatedAt: true,
+  senderId: true,
+  recipientId:true,
   sender: {
     select: {
       username: true,

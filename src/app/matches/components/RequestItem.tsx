@@ -49,7 +49,7 @@ export default function RequestItem({ match, onAction }: RequestItemProps) {
   };
 
   return (
-    <div className="bg-white rounded-md p-2 border-[1px] border-gray-300">
+    <Link href={`/matches/${match.id}`} className="bg-white rounded-md p-2 border-[1px] border-gray-300">
       <h3 className="text-md font-bold text-center">
         <span className="mr-1">От: </span>
         <Link className="text-blue-500" href={`/users/${request.senderId}`}>
@@ -98,6 +98,6 @@ export default function RequestItem({ match, onAction }: RequestItemProps) {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }

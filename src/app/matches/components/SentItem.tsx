@@ -10,7 +10,7 @@ interface RequestItemProps {
 export default function SentItem({ match,}: RequestItemProps) {
   const [sent, setRequest] = useState(match);
   return (
-    <div className="bg-white rounded-md p-2 border-[1px] border-gray-300">
+    <Link href={`/matches/${match.id}`}  className="bg-white rounded-md p-2 border-[1px] border-gray-300">
       <h3 className="text-md font-bold text-center">
             <span className="mr-1">Кому: </span>
             <Link className="text-blue-500" href={`/users/${sent.senderId}`}>
@@ -46,6 +46,6 @@ export default function SentItem({ match,}: RequestItemProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

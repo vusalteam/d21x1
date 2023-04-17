@@ -10,7 +10,7 @@ interface RequestItemProps {
 export default function MatchesItem({ match }: RequestItemProps) {
   const [sent, setRequest] = useState(match);
   return (
-    <div className="bg-white rounded-md p-2 border-[1px] border-gray-300 ">
+    <Link href={`/matches/${match.id}`} className="bg-white rounded-md p-2 border-[1px] border-gray-300 ">
       <div className="flex justify-between items-center">
         <p className="text-md font-bold text-center">
           <span className="mr-1">От: </span>
@@ -52,6 +52,6 @@ export default function MatchesItem({ match }: RequestItemProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
