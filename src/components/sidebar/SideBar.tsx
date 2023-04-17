@@ -27,7 +27,7 @@ const SideBar: React.FC<SideBarProps> = () => {
         </li>
         <li className="flex flex-col w-full">
           <Link
-            href="/profile/requests"
+            href="/matches"
             className="w-full border-b-[1px]  p-2 hover:bg-gray-300 mb-1.5 border-gray-100"
           >
             <span className="relative pr-4">
@@ -35,13 +35,13 @@ const SideBar: React.FC<SideBarProps> = () => {
                 <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full  h-2 w-2 bg-rose-400"></span>
               </span>
-              Запросы
+              Матчи
             </span>
           </Link>
         </li>
         <li className="flex flex-col w-full">
           <Link
-            href="/"
+            href="/chats"
             className="w-full border-b-[1px]  p-2 hover:bg-gray-200 mb-1.5 border-gray-100"
           >
             Чат

@@ -11,7 +11,7 @@ export async function getCurrentUser(fields: object = {include:{balance:true}}) 
   try {
     const session = await getSession();
     if (!session?.user?.email) return null
-    const user = await prisma.user.findUnique({where: {email: session?.user?.email},...fields});
+    const user = await prisma.user.findUnique({where: {email: session?.user?.email},include:{balance:true}});
     if (!user) return null;
     return {
       ...user,

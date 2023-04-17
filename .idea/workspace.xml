@@ -2,22 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8d3c0aa3-26fd-499a-b54b-f03edfed2596" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/getCurrentUser.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/getUserGameStats.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/auth/signin/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/auth/signin/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/auth/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/auth/signup/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/profile/components/user-bar/UserBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/profile/components/user-bar/UserBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/services/user/index.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/profile/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/profile/requests/RequestItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/profile/requests/RequestItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/profile/requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/profile/requests/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/signin/Form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/signin/Form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/header/nav/navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/header/nav/navigation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +47,7 @@
       <option name="presentableId" value="Default" />
       <updated>1680718949287</updated>
       <workItem from="1680718992903" duration="177000" />
-      <workItem from="1681128639224" duration="1448000" />
+      <workItem from="1681128639224" duration="2048000" />
     </task>
     <servers />
   </component>

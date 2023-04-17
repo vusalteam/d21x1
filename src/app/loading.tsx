@@ -1,3 +1,3 @@
 export default function Loading() {
-    return <p>Loading account details</p>;
+    return <p className="w-full text-center text-md text-gray-600">Загрузка...</p>;
   }

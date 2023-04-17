@@ -13,3 +13,10 @@
       height: 3px;
     }
   }
+
+  .chat-item-container:first-child {
+   border-bottom: 0;
+  }
+  .chat-item-container:last-child {
+   border-top: 0;
+  }

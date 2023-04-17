@@ -2,11 +2,8 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/api/db";
 import { compare, hash } from "bcryptjs";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { adapter } from "next/dist/server/web/adapter";
 import { UserStatus } from "@prisma/client";
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -19,7 +16,8 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials, req) {
-        if (!credentials?.email && !credentials?.password)
+        
+        if (!credentials?.email || !credentials?.password)
           throw new Error("Invalid credentials");
         const { email, password } = credentials;
         const user = await prisma.user.findUnique({
@@ -31,15 +29,16 @@ export const authOptions: NextAuthOptions = {
         if (!passwordIsCorrect) {
           throw new Error("Invalid username or password");
         }
+        
         return {
-          id: user.id + "",
+          id: user.id,
           username: user.username,
           email: user.email,
           steamId: user.steamId,
-          roles: user.roles,
-          balance: user.balance,
           avatar: user.avatar,
           accountType: user.accountType,
+          balance: user.balance,
+          roles: user.roles,
         };
       },
     }),
@@ -60,19 +59,25 @@ export const authOptions: NextAuthOptions = {
           !credentials?.password &&
           !credentials?.rePassword
         )
-          return null;
+          throw new Error("Invalid credentials");
         const { username, email, password, rePassword } = credentials;
-        let steamId = "";
+        let steamId: string | undefined = undefined;
         if (credentials?.steamId) steamId = credentials.steamId;
         const emailExist = await prisma.user.findUnique({
           where: { email },
         });
-        if (emailExist) return null;
+        if (emailExist) throw new Error("Email already exists");
         const usernameExist = await prisma.user.findUnique({
           where: { username },
         });
-        if (usernameExist) return null;
-        if (password !== rePassword) return null;
+        if (steamId) {
+          const steamIdExist = await prisma.user.findUnique({
+            where: { steamId },
+          });
+          if (steamIdExist) throw new Error("SteamId already exists");
+        }
+        if (usernameExist) throw new Error("Username already exists");
+        if (password !== rePassword)  throw new Error("Passwords don't match");
         const user = await prisma.user.create({
           data: {
             username,
@@ -92,8 +97,9 @@ export const authOptions: NextAuthOptions = {
           include: { roles: true, balance: true },
         });
         return {
-          id: user.id + "",
+          id: user.id ,
           username: user.username,
+          accountType: user.accountType,
           email: user.email,
           steamId: user.steamId,
           roles: user.roles,
@@ -120,37 +126,39 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: ({ session, token }) => {
       //console.log("Session Callback", { token });
-      if (token) {
+      if (token && token.user) {
         const t = token as unknown as any;
         return {
           ...session,
           user: {
             ...session.user,
-            id: t.id,
-            username: t.username,
+            id: t.user.id,
+            username: t.user.username,
             steamId: t.steamId,
-            roles: t.roles,
-            balance: t.balance,
-            avatar: t.avatar,
-            accountType: t.accountType,
+            roles: t.user.roles,
+            balance: t.user.balance,
+            avatar: t.user.avatar,
+            accountType: t.user.accountType,
           },
         };
       }
       return session;
     },
     jwt: ({ token, user, account }) => {
-      //console.log("account",account);
+      //console.log("JWT: ",{token,user});
       if (user) {
         const u = user as unknown as any;
         return {
           ...token,
-          id: u.id,
-          roles: u.roles,
-          balance: u.balance,
-          username: u.username,
-          steamId: u.steamId,
-          avatar: u.avatar,
-          accountType: u.accountType,
+          user: {
+            id: u.id,
+            roles: u.roles,
+            balance: u.balance,
+            username: u.username,
+            steamId: u.steamId,
+            avatar: u.avatar,
+            accountType: u.accountType,
+          },
         };
       }
       return token;

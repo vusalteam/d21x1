@@ -3,7 +3,7 @@ export const HorizontalScroll = (e: React.WheelEvent<HTMLDivElement>) => {
   if (e.deltaY === 0) return;
   const el = e.currentTarget;
   if (
-    !(el.scrollLeft === 0 && e.deltaY < 0) &&
+    !(el.scrollLeft === 0 && e.deltaY < 0) && 
     !(
       el.scrollWidth - el.clientWidth - Math.round(el.scrollLeft) === 0 &&
       e.deltaY > 0

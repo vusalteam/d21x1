@@ -25,7 +25,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`flex flex-col min-h-screen justify-between overflow-hidden text-sm  bg-gray-50 ${lato.className}`}
+        className={`flex flex-col min-h-screen justify-between overflow-y-hidden text-sm  bg-gray-50 ${lato.className}`}
       >
         <AuthProvider session={session}>
           <Header />
@@ -53,19 +53,26 @@ export default async function RootLayout({
                 </div>
               )}
               <div
-                className="flex 
+                className="
+                  flex 
                   flex-col  
                   w-full 
                   border-gray-100 
                   md:rounded-xl 
-                  border-[1px]
-                  overflow-y-scroll
+                  border-[1px] 
+                  h-[calc(100vh-65px)]
+                  overflow-y-scroll 
                   bg-white
                   mr-0
-                  p-4
-                  scrollbar scrollbar-thumb-gray-400 scrollbar-medium scrollbar-white
-                  "
-              >
+                  px-4
+                  pt-2
+                  pb-4
+                  scrollbar 
+                  scrollbar-thumb-gray-300 
+                  scrollbar-medium 
+                  scrollbar-white
+                  
+                  ">
                 {children}
               </div>
             </section>
